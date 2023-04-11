@@ -9,5 +9,4 @@ public class MabitApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MabitApplication.class, args);
 	}
-
 }
