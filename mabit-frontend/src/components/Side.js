@@ -1,13 +1,16 @@
-import React, { memo, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import {
   IoChevronDownSharp,
   IoChevronForwardOutline,
   IoAddSharp,
 } from 'react-icons/io5';
+import { AiOutlineDelete } from 'react-icons/ai';
 import { Button, Form, Modal } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { deleteMemo, initMemo } from '../reducers/memos';
 
 const StyledContentDiv = styled.div`
   height: 5vh;
@@ -29,10 +32,11 @@ const StyledMemoDiv = styled.div`
 
 const StyledMemoChildDiv = styled.div`
   height: 5vh;
-  background-color: #87cbb9;
-  background-color: #b9eddd;
+  background-color: ${(props) => props.background || '#b9eddd'};
   font-size: xx-large;
+  display: ${(props) => props.display || ''};
 `;
+
 const Side = () => {
   const [memoShow, setMemoShow] = useState(false);
   const [todoListShow, setTodoListShow] = useState(false);
@@ -44,6 +48,46 @@ const Side = () => {
   const todoListHandleClose = () => setTodoListShow(false);
   const todoListHandleShow = () => setTodoListShow(true);
   const navigate = useNavigate();
+
+  // reducer가 많아지면 action상수가 중복될 수 있으니
+  // 액션이름 앞에 파일 이름을 넣어준다.
+  const dispatch = useDispatch();
+  useEffect(() => {
+    fetch('http://localhost:8080/memos')
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        if (res !== null) {
+          dispatch(initMemo(res));
+        } else {
+          alert('메모 등록에 실패하였습니다.');
+        }
+      });
+  }, [dispatch]);
+
+  const onDeleteButtonClick = (e) => {
+    console.log(e);
+    console.log(e.target);
+    const id = e.target.dataset.id;
+    console.log(id);
+    fetch('http://localhost:8080/memo/' + id, {
+      method: 'DELETE',
+    })
+      .then((res) => {
+        console.log(1, res);
+        dispatch(deleteMemo(id));
+        return res;
+      })
+      .then((res) => {
+        // Catch는 여기서 오류가나야 실행됨.
+        if (res !== null) {
+          navigate('/');
+        } else {
+          alert('메모 삭제에 실패하였습니다.');
+        }
+      });
+  };
 
   const { memos } = useSelector((state) => state.memos);
   console.log('memos', memos);
@@ -86,10 +130,22 @@ const Side = () => {
           <IoAddSharp />
         </span>
       </StyledMemoDiv>
+
+      {/* DB에서 가져온 memo 출력 부분 */}
       {memos.map((memo, idx) => (
-        <StyledMemoDiv key={idx}>{memo.title}</StyledMemoDiv>
+        <StyledMemoChildDiv
+          key={idx}
+          background={idx % 2 === 1 ? '#87cbb9' : ''}
+          display={!memoToggle ? 'none' : ''}
+        >
+          <Link to={'/memo/' + memo.id}>{memo.title}</Link>
+          <span data-id={memo.id} onClick={onDeleteButtonClick}>
+            <AiOutlineDelete data-id={memo.id} />
+          </span>
+        </StyledMemoChildDiv>
       ))}
 
+      {/* Memo, todoList Modla 부분 */}
       <Modal show={memoShow} onHide={memoHandleClose}>
         <Modal.Header closeButton>
           <Modal.Title>새로운 Memo 생성</Modal.Title>

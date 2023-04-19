@@ -1,9 +1,8 @@
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import Header from './components/Header';
 import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Side from './components/Side';
-import DraftEditor from './components/DraftEditor';
 import MemoForm from './pages/MemoForm';
 import TodoListForm from './pages/TodoListForm';
 
@@ -34,7 +33,7 @@ function App() {
             <Route
               path="/create/todoList/:todoListTitle"
               exact={true}
-              element={<TodoListForm/>}
+              element={<TodoListForm />}
             />
           </Routes>
         </Col>

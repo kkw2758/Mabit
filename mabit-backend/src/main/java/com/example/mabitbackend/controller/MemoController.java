@@ -18,4 +18,16 @@ public class MemoController {
         memo.setTitle(memoName);
         return new ResponseEntity<>(memoService.저장하기(memo), HttpStatus.CREATED);
     }
+
+    @CrossOrigin
+    @DeleteMapping("/memo/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+        return new ResponseEntity<>(memoService.삭제하기(id), HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping("/memos")
+    public ResponseEntity<?> findAll() {
+        return new ResponseEntity<>(memoService.메모들가져오기(), HttpStatus.OK);
+    }
 }

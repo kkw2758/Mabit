@@ -2,8 +2,11 @@
 // 액션이름 앞에 파일 이름을 넣어준다.
 
 const SAVE = 'MEMO/SAVE';
+const DELETE = 'MEMO/DELETE';
+const INIT = 'MEMO/INIT';
 export const saveMemo = (newMemo) => ({ type: SAVE, newMemo });
-
+export const initMemo = (initialState) => ({ type: INIT, initialState });
+export const deleteMemo = (id) => ({ type: DELETE, id });
 const initialState = {
   memos: [],
 };
@@ -12,6 +15,10 @@ const memos = (state = initialState, action) => {
   switch (action.type) {
     case SAVE:
       return { memos: [...state.memos, action.newMemo] };
+    case INIT:
+      return { memos: action.initialState };
+    case DELETE:
+      return { memos: state.memos.filter((memo) => memo.id != action.id) };
     // default를 쓰지 않으면 맨처음 state에 count값이 undefined가 나온다
     default:
       return state;

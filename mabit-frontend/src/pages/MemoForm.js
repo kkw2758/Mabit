@@ -34,9 +34,8 @@ const MemoForm = () => {
       })
       .then((res) => {
         // Catch는 여기서 오류가나야 실행됨.
-        console.log('정상', res);
         if (res !== null) {
-          dispatch(saveMemo({ title: memoTitle, content: content.value }));
+          dispatch(saveMemo(res));
           navigate('/');
         } else {
           alert('메모 등록에 실패하였습니다.');

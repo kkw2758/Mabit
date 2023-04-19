@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Nav, Navbar } from 'react-bootstrap';
+import { Nav, Navbar } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
@@ -17,7 +17,6 @@ const Header = () => {
           <Link to="/loginForm" className="nav-link">
             로그인
           </Link>
-          <a href="/joinForm"> 태그</a>
         </Nav>
       </Navbar>
     </>
