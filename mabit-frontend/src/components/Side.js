@@ -48,7 +48,6 @@ const Side = () => {
   const todoListHandleClose = () => setTodoListShow(false);
   const todoListHandleShow = () => setTodoListShow(true);
   const navigate = useNavigate();
-
   // reducer가 많아지면 action상수가 중복될 수 있으니
   // 액션이름 앞에 파일 이름을 넣어준다.
   const dispatch = useDispatch();
@@ -65,12 +64,10 @@ const Side = () => {
         }
       });
   }, [dispatch]);
-
   const onDeleteButtonClick = (e) => {
     console.log(e);
     console.log(e.target);
     const id = e.target.dataset.id;
-    console.log(id);
     fetch('http://localhost:8080/memo/' + id, {
       method: 'DELETE',
     })
@@ -80,7 +77,9 @@ const Side = () => {
       })
       .then((res) => {
         if (res === 'OK') {
-          dispatch(deleteMemo(id));
+          console.log(typeof id);
+          dispatch(deleteMemo(Number(id)));
+          console.log('삭제후', memos);
           navigate('/');
         } else {
           alert('메모 삭제에 실패하였습니다.');
@@ -96,7 +95,6 @@ const Side = () => {
         <span
           onClick={() => {
             setTodoListToggle(!todoListToggle);
-            console.log('todo', todoListToggle);
           }}
         >
           {todoListToggle === false ? (

@@ -1,10 +1,7 @@
-package com.example.mabitbackend.domain;
+package com.example.mabitbackend.Entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.annotation.processing.Generated;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,7 +10,7 @@ import javax.persistence.Id;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
 public class Memo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +18,14 @@ public class Memo {
 
     private String title;
     private String content;
+
+    @Builder
+    public Memo(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }

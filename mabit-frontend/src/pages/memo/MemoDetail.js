@@ -3,13 +3,17 @@ import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import React, { useEffect, useState } from 'react';
 import { Button, Card } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { changeField } from '../../reducers/draftContent';
 
 function MemoDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [memoTitle, setMemoTitle] = useState('');
+  const [memoContent, setMemoContent] = useState('');
+  const dispatch = useDispatch();
 
   useEffect(() => {
     let htmlToEditor = '';
@@ -24,7 +28,7 @@ function MemoDetail() {
           htmlToEditor = res.content;
           initEditorState(htmlToEditor);
           setMemoTitle(res.title);
-          console.log('응답', res);
+          setMemoContent(res.content);
         } else {
           alert('메모 요청에 실패하였습니다.');
         }
@@ -53,6 +57,12 @@ function MemoDetail() {
   );
 
   const onBtnClick = () => {
+    dispatch(
+      changeField({
+        title: memoTitle,
+        content: memoContent,
+      }),
+    );
     navigate('/memo/modify/' + id);
   };
   return (

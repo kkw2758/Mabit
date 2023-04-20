@@ -8,7 +8,7 @@ export const changeField = (payload) => ({ type: CHANGE_FIELD, payload });
 export const initField = () => ({ type: INIT_FIELD });
 
 const initialState = {
-  content: { key: '', value: '' },
+  content: { title: '', content: '' },
 };
 
 const draftContent = (state = initialState, action) => {
@@ -16,11 +16,14 @@ const draftContent = (state = initialState, action) => {
     case CHANGE_FIELD:
       return {
         ...state,
-        content: { key: action.payload.key, value: action.payload.value },
+        content: {
+          title: action.payload.title,
+          content: action.payload.content,
+        },
       };
     case INIT_FIELD:
       return {
-        content: { key: '', value: '' },
+        content: { title: '', content: '' },
       };
     // default를 쓰지 않으면 맨처음 state에 count값이 undefined가 나온다
     default:

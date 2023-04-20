@@ -25,17 +25,6 @@ const MyBlock = styled.div`
   }
 `;
 
-const IntroduceContent = styled.div`
-  position: relative;
-  border: 0.0625rem solid #d7e2eb;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  padding: 1.5rem;
-  width: 50%;
-  margin: 0 auto;
-  margin-bottom: 4rem;
-`;
-
 const DraftEditor = (props) => {
   // // useState로 상태관리하기 초기값은 EditorState.createEmpty()
   // // EditorState의 비어있는 ContentState 기본 구성으로 새 개체를 반환 => 이렇게 안하면 상태 값을 나중에 변경할 수 없음.
@@ -66,16 +55,16 @@ const DraftEditor = (props) => {
     setEditorState(editorState);
     // 리덕스 changeField
     onChangeField({
-      key: 'content',
-      value: editorToHtml(editorState),
+      title: props.title,
+      content: editorToHtml(editorState),
     });
   };
 
+  // 화면 로딩이 되면
   useEffect(() => {
-    // if (rendered.current) return;
-    // rendered.current = true;
-    console.log('useEffect 발동');
-    const blocksFromHtml = htmlToDraft(content.value);
+    if (rendered.current) return;
+    rendered.current = true;
+    const blocksFromHtml = htmlToDraft(content.content);
     if (blocksFromHtml) {
       const { contentBlocks, entityMap } = blocksFromHtml;
       const contentState = ContentState.createFromBlockArray(
@@ -85,7 +74,8 @@ const DraftEditor = (props) => {
       const editorState = EditorState.createWithContent(contentState);
       setEditorState(editorState);
     }
-  }, []);
+  }, [content.content]);
+
   return (
     <>
       <MyBlock>
@@ -116,9 +106,6 @@ const DraftEditor = (props) => {
           onEditorStateChange={onEditorStateChange}
         />
       </MyBlock>
-      <IntroduceContent
-        dangerouslySetInnerHTML={{ __html: editorToHtml(editorState) }}
-      />
     </>
   );
 };

@@ -13,7 +13,6 @@ const StyledFlexContentContainerDiv = styled.div`
   justify-content: space-between;
 `;
 const Home = () => {
-  console.log('rendered');
   return (
     <StyledFlexContainerDiv>
       <Clock />

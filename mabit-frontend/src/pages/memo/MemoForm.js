@@ -7,7 +7,6 @@ import { saveMemo } from '../../reducers/memos';
 import { initField } from '../../reducers/draftContent';
 
 const MemoForm = () => {
-  console.log('render');
   const { memoTitle } = useParams();
   const navigate = useNavigate();
 
@@ -27,7 +26,7 @@ const MemoForm = () => {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
-      body: JSON.stringify({ title: memoTitle, content: content.value }),
+      body: JSON.stringify({ title: memoTitle, content: content.content }),
     })
       .then((res) => {
         return res.json();
