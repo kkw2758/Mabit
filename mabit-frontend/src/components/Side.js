@@ -76,12 +76,11 @@ const Side = () => {
     })
       .then((res) => {
         console.log(1, res);
-        dispatch(deleteMemo(id));
-        return res;
+        return res.text();
       })
       .then((res) => {
-        // Catch는 여기서 오류가나야 실행됨.
-        if (res !== null) {
+        if (res === 'OK') {
+          dispatch(deleteMemo(id));
           navigate('/');
         } else {
           alert('메모 삭제에 실패하였습니다.');
@@ -90,7 +89,6 @@ const Side = () => {
   };
 
   const { memos } = useSelector((state) => state.memos);
-  console.log('memos', memos);
   return (
     <>
       <StyledContentDiv>Content</StyledContentDiv>

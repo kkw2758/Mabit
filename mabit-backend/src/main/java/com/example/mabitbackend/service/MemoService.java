@@ -15,6 +15,10 @@ public class MemoService {
     private final MemoRepository memoRepository;
 
     @Transactional
+    public Memo 메모가져오기(Long id) {
+        return memoRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("id를 확인해주세요!!"));
+    }
+    @Transactional
     public Memo 저장하기(Memo memo) {
         return memoRepository.save(memo);
     }

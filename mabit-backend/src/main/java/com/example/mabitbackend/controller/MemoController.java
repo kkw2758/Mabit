@@ -30,4 +30,10 @@ public class MemoController {
     public ResponseEntity<?> findAll() {
         return new ResponseEntity<>(memoService.메모들가져오기(), HttpStatus.OK);
     }
+
+    @CrossOrigin
+    @GetMapping("/memo/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id ){
+        return new ResponseEntity<>(memoService.메모가져오기(id), HttpStatus.OK);
+    }
 }

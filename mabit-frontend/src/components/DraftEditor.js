@@ -47,6 +47,7 @@ const DraftEditor = (props) => {
   // };
 
   // redux 사용을 위한 dispatch 가져오기
+
   const dispatch = useDispatch();
   const { content } = useSelector((state) => state.draftContent);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -71,8 +72,9 @@ const DraftEditor = (props) => {
   };
 
   useEffect(() => {
-    if (rendered.current) return;
-    rendered.current = true;
+    // if (rendered.current) return;
+    // rendered.current = true;
+    console.log('useEffect 발동');
     const blocksFromHtml = htmlToDraft(content.value);
     if (blocksFromHtml) {
       const { contentBlocks, entityMap } = blocksFromHtml;
@@ -83,7 +85,7 @@ const DraftEditor = (props) => {
       const editorState = EditorState.createWithContent(contentState);
       setEditorState(editorState);
     }
-  }, [content]);
+  }, []);
   return (
     <>
       <MyBlock>

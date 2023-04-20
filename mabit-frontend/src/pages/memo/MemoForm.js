@@ -1,9 +1,10 @@
 import React from 'react';
-import DraftEditor from '../components/DraftEditor';
+import DraftEditor from '../../components/DraftEditor';
 import { Button } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { saveMemo } from '../reducers/memos';
+import { saveMemo } from '../../reducers/memos';
+import { initField } from '../../reducers/draftContent';
 
 const MemoForm = () => {
   console.log('render');
@@ -29,14 +30,16 @@ const MemoForm = () => {
       body: JSON.stringify({ title: memoTitle, content: content.value }),
     })
       .then((res) => {
-        console.log(1, res);
         return res.json();
       })
       .then((res) => {
         // Catch는 여기서 오류가나야 실행됨.
         if (res !== null) {
+          // 다음 content에 영향이 없도록 초기화
+          dispatch(initField());
+          // 메모 추가
           dispatch(saveMemo(res));
-          navigate('/');
+          navigate('/memo/' + res.id);
         } else {
           alert('메모 등록에 실패하였습니다.');
         }

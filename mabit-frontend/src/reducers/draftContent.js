@@ -2,7 +2,10 @@
 // 액션이름 앞에 파일 이름을 넣어준다.
 
 const CHANGE_FIELD = 'CONTENT/CHANGE_FIELD';
+const INIT_FIELD = 'CONTENT/INIT_FIELD';
+
 export const changeField = (payload) => ({ type: CHANGE_FIELD, payload });
+export const initField = () => ({ type: INIT_FIELD });
 
 const initialState = {
   content: { key: '', value: '' },
@@ -14,6 +17,10 @@ const draftContent = (state = initialState, action) => {
       return {
         ...state,
         content: { key: action.payload.key, value: action.payload.value },
+      };
+    case INIT_FIELD:
+      return {
+        content: { key: '', value: '' },
       };
     // default를 쓰지 않으면 맨처음 state에 count값이 undefined가 나온다
     default:
