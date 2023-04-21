@@ -18,7 +18,7 @@ const MyBlock = styled.div`
     margin-top: 1rem;
   }
   .editor {
-    height: 400px !important;
+    height: 120px !important;
     border: 1px solid #f1f1f1 !important;
     padding: 5px !important;
     border-radius: 2px !important;

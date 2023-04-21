@@ -11,6 +11,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { deleteMemo, initMemo } from '../reducers/memos';
+import {
+  deleteTodoLists,
+  initTodoLists,
+  saveTodoLists,
+} from '../reducers/todolists';
 
 const StyledContentDiv = styled.div`
   height: 5vh;
@@ -63,8 +68,21 @@ const Side = () => {
           alert('메모 등록에 실패하였습니다.');
         }
       });
+
+    fetch('http://localhost:8080/todos')
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        if (res !== null) {
+          dispatch(initTodoLists(res));
+        } else {
+          alert('에러 발생');
+        }
+      });
   }, [dispatch]);
-  const onDeleteButtonClick = (e) => {
+
+  const onMemoDeleteButtonClick = (e) => {
     console.log(e);
     console.log(e.target);
     const id = e.target.dataset.id;
@@ -87,7 +105,31 @@ const Side = () => {
       });
   };
 
+  // todos 삭제 부분
+  const onTodoDeleteButtonClick = (e) => {
+    console.log(e);
+    console.log(e.target);
+    const id = e.target.dataset.id;
+    fetch('http://localhost:8080/todos/' + id, {
+      method: 'DELETE',
+    })
+      .then((res) => {
+        console.log(1, res);
+        return res.text();
+      })
+      .then((res) => {
+        if (res === 'OK') {
+          dispatch(deleteTodoLists(Number(id)));
+          console.log('삭제후', memos);
+          navigate('/');
+        } else {
+          alert('todolists 삭제에 실패하였습니다.');
+        }
+      });
+  };
+
   const { memos } = useSelector((state) => state.memos);
+  const { todolists } = useSelector((state) => state.todolists);
   return (
     <>
       <StyledContentDiv>Content</StyledContentDiv>
@@ -108,6 +150,21 @@ const Side = () => {
           <IoAddSharp />
         </span>
       </StyledTodoListDiv>
+
+      {/* DB에서 가져온 todolist 출력 부분 */}
+      {todolists.map((todolist, idx) => (
+        <StyledMemoChildDiv
+          key={idx}
+          background={idx % 2 === 1 ? '#87cbb9' : ''}
+          display={!todoListToggle ? 'none' : ''}
+        >
+          <Link to={'/todos/' + todolist.id}>{todolist.title}</Link>
+          <span data-id={todolist.id} onClick={onTodoDeleteButtonClick}>
+            <AiOutlineDelete data-id={todolist.id} />
+          </span>
+        </StyledMemoChildDiv>
+      ))}
+
       <StyledMemoDiv>
         <span
           onClick={() => {
@@ -135,7 +192,7 @@ const Side = () => {
           display={!memoToggle ? 'none' : ''}
         >
           <Link to={'/memo/' + memo.id}>{memo.title}</Link>
-          <span data-id={memo.id} onClick={onDeleteButtonClick}>
+          <span data-id={memo.id} onClick={onMemoDeleteButtonClick}>
             <AiOutlineDelete data-id={memo.id} />
           </span>
         </StyledMemoChildDiv>
@@ -198,10 +255,29 @@ const Side = () => {
           <Button
             variant="primary"
             onClick={() => {
-              todoListHandleClose();
-              const todoListTitle =
-                document.getElementById('todoListTitle').value;
-              navigate('/create/todoList/' + todoListTitle);
+              fetch('http://localhost:8080/todos', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json; charset=utf-8',
+                },
+                body: JSON.stringify({
+                  title: document.getElementById('todoListTitle').value,
+                }),
+              })
+                .then((res) => {
+                  return res.json();
+                })
+                .then((res) => {
+                  if (res !== null) {
+                    // dispatch 들어가야함
+                    dispatch(saveTodoLists(res));
+                    navigate('/todos/' + res.id);
+                    console.log(res);
+                    todoListHandleClose();
+                  } else {
+                    alert('TodoList 등록에 실패하였습니다.');
+                  }
+                });
             }}
           >
             Save
