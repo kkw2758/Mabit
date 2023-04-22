@@ -34,9 +34,9 @@ public class TodosController {
     @CrossOrigin
     @GetMapping("/todos/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id ){
-        Todos a = todosService.메모가져오기(id);
+//        Todos a = todosService.메모가져오기(id);
 //        System.out.println("A" + a.getTodoList());
-        return new ResponseEntity<>(a.getTodoList(), HttpStatus.OK);
+        return new ResponseEntity<>(todosService.메모가져오기(id), HttpStatus.OK);
     }
     @CrossOrigin
     @DeleteMapping("/todos/{id}")
